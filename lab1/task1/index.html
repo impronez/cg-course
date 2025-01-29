@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задание 1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+    </style>
+    <script src="index.js"></script>
+</head>
+<body>
+    <div >
+        <div style="width: 100%; height: 90vh; display: flex; justify-content: center;">
+            <svg style="width: 150px;">
+                <ellipse id="fst-letter" cx="60" cy="80" rx="55" ry="70" stroke="#5a52ce" stroke-width="8" fill="none" />
+            </svg>
+            <svg style="width: 150px;">
+                <path id="snd-letter" d="M110,20 A60,70 0 1,0 110,140" stroke="#41bab0" stroke-width="8" fill="none" />
+            </svg>
+            <svg style="width: 150px">
+                <g id="trd-letter">
+                    <line x1="30" y1="10" x2="30" y2="150" stroke="#e87529" stroke-width="8" stroke-linecap="round" />
+                    <line x1="30" y1="150" x2="110" y2="10" stroke="#e87529" stroke-width="8" stroke-linecap="round" />
+                    <line x1="110" y1="10" x2="110" y2="150" stroke="#e87529" stroke-width="8" stroke-linecap="round" />
+                </g>
+            </svg>
+        </div>
+    </div>
+</body>
+</html>
