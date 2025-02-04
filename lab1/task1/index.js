@@ -14,7 +14,7 @@ function createDropAnimation(element, delay) {
     const gravity = 100;
     const startTime = Date.now() + delay;
     const maxHeight = 500;
-    let currentHeight = 0;
+    let currentY = 0;
     let prevTime = null;
     let speed = 0;
 
@@ -36,14 +36,14 @@ function createDropAnimation(element, delay) {
 
         const deltaY = speed * deltaTime;
 
-        currentHeight += deltaY;
-        currentHeight = Math.min(currentHeight, maxHeight);
+        currentY += deltaY;
+        currentY = Math.min(currentY, maxHeight);
 
-        element.style.transform = `translateY(${currentHeight}px)`;
+        element.style.transform = `translateY(${currentY}px)`;
 
-        if (currentHeight >= maxHeight) {
-            speed = -speed; // можно добавить замедляющий коэффициент
-            currentHeight = maxHeight;
+        if (currentY >= maxHeight) {
+            speed = -speed;
+            currentY = maxHeight;
         }
 
         prevTime = currentTime;
