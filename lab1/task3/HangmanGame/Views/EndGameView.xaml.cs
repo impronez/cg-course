@@ -20,10 +20,6 @@ namespace HangmanGame.Views
 
 		public EndGameView(string message, GameView gameView)
 		{
-			if (gameView == null)
-			{
-				Console.WriteLine("sd");
-			}
 			Message = message;
 			_gameView = gameView;
 			InitializeComponent();
