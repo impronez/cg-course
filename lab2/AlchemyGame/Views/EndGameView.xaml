@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="AlchemyGame.Views.EndGameView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AlchemyGame.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="900">
+    <Grid>
+        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Congratulations! You have opened all the items" VerticalAlignment="Center" FontSize="24"/>
+        <Button Content="Close the game" HorizontalAlignment="Center" Margin="0,369,0,0" VerticalAlignment="Top" Click="End_Game_Button_Click" FontSize="24" Width="240"/>
+
+    </Grid>
+</UserControl>

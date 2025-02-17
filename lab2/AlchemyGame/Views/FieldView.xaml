@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="AlchemyGame.Views.FieldView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AlchemyGame.Views"
+             xmlns:utilities="clr-namespace:AlchemyGame.Utilities"
+             mc:Ignorable="d" 
+             d:DesignHeight="680" d:DesignWidth="830">
+    <UserControl.Resources>
+        <utilities:ElementToImageConverter x:Key="ElementToImageConverter"/>
+    </UserControl.Resources>
+    <Grid Background="LightGray">
+        <ItemsControl x:Name="CurrentElementsControl" ItemsSource="{Binding CurrentElements}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas x:Name="FieldCanvas"
+                    MouseDown="CanvasMouseLeftButtonDown" 
+                    MouseMove="CanvasMouseMove" 
+                    MouseUp="CanvasMouseLeftButtonUp" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.Resources>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="Canvas.Left" Value="{Binding Left}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Top}" />
+                    <Setter Property="Canvas.ZIndex" Value="{Binding ZIndex}" />
+                </Style>
+            </ItemsControl.Resources>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Image Width="50" Height="50" 
+                    Source="{Binding Type, Converter={StaticResource ElementToImageConverter}}"
+                    Canvas.ZIndex="{Binding ZIndex}"
+                    MouseDown="ItemMouseDown"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Image x:Name="Garbage" Width="50" Height="50" Source="pack://application:,,,/Resources/Images/Garbage.png" Margin="0,0,0,0"
+        Panel.ZIndex="-1" VerticalAlignment="Bottom"/>
+    </Grid>
+</UserControl>

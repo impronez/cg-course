@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="AlchemyGame.Views.GameView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:utilities="clr-namespace:AlchemyGame.Utilities"
+             xmlns:local="clr-namespace:AlchemyGame.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="680" d:DesignWidth="1280">
+    <UserControl.Resources>
+        <utilities:ElementToImageConverter x:Key="ElementToImageConverter"/>
+    </UserControl.Resources>
+    <Canvas x:Name="MainCanvas" MouseMove="AddingElementOnMouseMove" MouseLeftButtonUp="AddingElementOnMouseLeftButtonUp" Height="680">
+        <Grid Height="680">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="830"/>
+                <ColumnDefinition Width="450"/>
+            </Grid.ColumnDefinitions>
+
+            <local:FieldView />
+
+            <Grid Grid.Column="1">
+                <Border BorderBrush="Black" BorderThickness="1,0,0,0" Background="Transparent">
+                    <Grid Margin="10,0,10,0">
+                        <TextBlock HorizontalAlignment="Center" Margin="0,30,0,0" TextWrapping="Wrap" Panel.ZIndex="-1" Text="Open elements" VerticalAlignment="Top" FontSize="16"/>
+                        <ScrollViewer Margin="0,60,0,0" VerticalScrollBarVisibility="Auto">
+                            <WrapPanel Width="450">
+                                <ItemsControl ItemsSource="{Binding OpenElements}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <Image Width="50" Height="50" Source="{Binding Converter={StaticResource ElementToImageConverter}}"
+                                                    MouseLeftButtonDown="AddElementMouseDown"/>
+                                                <TextBlock Text="{Binding}" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </WrapPanel>
+                        </ScrollViewer>
+                        <Button Content="Sort" HorizontalAlignment="Left" Margin="327,32,0,0" VerticalAlignment="Top" Click="SortButton_Click" Width="60"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Canvas>
+</UserControl>

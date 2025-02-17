@@ -1,0 +1,41 @@
+﻿namespace AlchemyGame.Models
+{
+	public enum ElementType
+	{
+		Air,
+		Alcohol,
+		Bacteria,
+		Cloud,
+		Crater,
+		Dust,
+		Earth,
+		Electricity,
+		Energy,
+		Explosion,
+		Fire,
+		Geyser,
+		Gunpowder,
+		Hydrogen,
+		Life,
+		Lava,
+		Metal,
+		MolotovCoctail,
+		Mud,
+		Oxygen,
+		Ozone,
+		Pressure,
+		Rain,
+		RattlesnakeGas,
+		Rust,
+		Shockwave,
+		Steam,
+		SteamBoiler,
+		Stone,
+		Storm,
+		Swamp,
+		Tsunami,
+		Vodka,
+		Volcano,
+		Water
+	}
+}
