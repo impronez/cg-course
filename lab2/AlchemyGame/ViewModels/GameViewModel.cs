@@ -14,7 +14,7 @@ namespace AlchemyGame.ViewModels
 	{
 		private readonly GameModel _gameModel;
 		public GameState State => _gameModel.State;
-		
+		// перенести элемент виз во viewmodel
 		public ObservableCollection<ElementType> OpenElements { get; }
 		public ObservableCollection<VisualElement> CurrentElements { get; }
 

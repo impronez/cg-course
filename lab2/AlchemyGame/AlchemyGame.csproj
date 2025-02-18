@@ -60,7 +60,7 @@
     <Compile Include="Models\ElementCombinations.cs" />
     <Compile Include="Models\ElementType.cs" />
     <Compile Include="Models\GameModel.cs" />
-    <Compile Include="Models\VisualElement.cs" />
+    <Compile Include="ViewModels\VisualElement.cs" />
     <Compile Include="Utilities\ElementIdGenerator.cs" />
     <Compile Include="Utilities\ElementImages.cs" />
     <Compile Include="Utilities\ElementChangeEventArgs.cs" />
