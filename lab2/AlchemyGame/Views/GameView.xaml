@@ -24,7 +24,7 @@
                     <Grid Margin="10,0,10,0">
                         <TextBlock HorizontalAlignment="Center" Margin="0,30,0,0" TextWrapping="Wrap" Panel.ZIndex="-1" Text="Open elements" VerticalAlignment="Top" FontSize="16"/>
                         <ScrollViewer Margin="0,60,0,0" VerticalScrollBarVisibility="Auto">
-                            <WrapPanel Width="450">
+                            <WrapPanel Width="400">
                                 <ItemsControl ItemsSource="{Binding OpenElements}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
