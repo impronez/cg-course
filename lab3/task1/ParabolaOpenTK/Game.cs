@@ -77,8 +77,31 @@ namespace ParabolaOpenTK
         protected override void OnLoad()
         {
             base.OnLoad();
-
             GL.ClearColor(Color4.Black);
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();  
+            GL.Ortho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+
+            GL.MatrixMode(MatrixMode.Modelview);
+        }
+
+        protected override void OnResize(ResizeEventArgs e)
+        {
+            base.OnResize(e);
+
+            GL.Viewport(0, 0, e.Width, e.Height);
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity(); // сброс текущей матрицы
+
+            float aspectRatio = (float)e.Width / e.Height;
+            if (aspectRatio > 1.0f)
+                GL.Ortho(-aspectRatio, aspectRatio, -1.0, 1.0, -1.0, 1.0);
+            else
+                GL.Ortho(-1.0, 1.0, -1.0f / aspectRatio, 1.0f / aspectRatio, -1.0, 1.0);
+
+            GL.MatrixMode(MatrixMode.Modelview);
         }
 
         protected override void OnRenderFrame(FrameEventArgs args)
