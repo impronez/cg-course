@@ -1,8 +1,9 @@
 ﻿using OpenTK.Windowing.Desktop;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace ParabolaOpenTK
+namespace Parabola
 {
     internal class Program
     {
@@ -23,9 +24,18 @@ namespace ParabolaOpenTK
                 Profile = ContextProfile.Compatability
             };
 
-            using (Game game = new Game(GameWindowSettings.Default, nativeWindowSettings))
+            Func<float, float> function = x => 2 * x * x - 3 * x - 8;
+
+            ParabolaArgs arguments = new ParabolaArgs()
             {
-                // Парабола вида у = 2x^2 - 3x - 8 на интервале [-2;3] 
+                MinValue = -2,
+                MaxValue = 3,
+                Function = function,
+                Color = Color4.OrangeRed
+            };
+
+            using (ViewWindow game = new ViewWindow(GameWindowSettings.Default, nativeWindowSettings, arguments))
+            {
                 game.Run();
             }
         }

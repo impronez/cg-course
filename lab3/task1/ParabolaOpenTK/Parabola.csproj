@@ -11,4 +11,13 @@
     <PackageReference Include="OpenTK" Version="4.9.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Shader.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Shader.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
