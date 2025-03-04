@@ -10,16 +10,17 @@ namespace Parabola
         private Shader _shader;
         private Matrix4 _projection;
 
-        private ParabolaArgs _args;
+        //private ParabolaArgs _args;
+        private Graph _graph;
 
-        public ViewWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, ParabolaArgs args) 
+        public ViewWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, GraphArgs args) 
             : base(gameWindowSettings, nativeWindowSettings)
         {
             Console.WriteLine(GL.GetString(StringName.Version));
 
             VSync = VSyncMode.On;
 
-            _args = args;
+            _graph = new Graph(args);
         }
 
         protected override void OnRenderFrame(FrameEventArgs args)
@@ -27,11 +28,12 @@ namespace Parabola
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             _shader.Use();
-            UpdateVertexFormat();
+            //UpdateVertexFormat();
 
-            DrawCoordinateAxes();
+            //DrawCoordinateAxes();
 
-            DrawParabola();
+            //DrawParabola();
+            _graph.Render();
 
             SwapBuffers();
 
@@ -40,10 +42,13 @@ namespace Parabola
 
         private void DrawParabola()
         {
-            var vertices = Parabola.GetVertices(_args.Function, _args.MinValue, _args.MaxValue, _args.Color);
-            
-            AddArrayToArrayBuffer(vertices.ToArray());
-            GL.DrawArrays(PrimitiveType.LineStrip, 0, vertices.Count / 6);
+            //var vertices = Parabola.GetVertices(_args.Function, _args.MinValue, _args.MaxValue, _args.Color);
+
+            ////float[] floatArray = vertices.SelectMany(v => Vertex.ToFloatArray(v)).ToArray();
+
+
+            //AddArrayToArrayBuffer(vertices.ToArray());
+            //GL.DrawArrays(PrimitiveType.LineStrip, 0, vertices.Count / 6);
         }
 
         private void DrawCoordinateAxes()
@@ -114,6 +119,7 @@ namespace Parabola
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
             // Цвет
+            // Сделать так, чтобы в одном месте была отрисовка и применение 6 и 3
             GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
             GL.EnableVertexAttribArray(1);
         }
@@ -141,8 +147,8 @@ namespace Parabola
             int vertexBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferObject);
 
-            int VertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(VertexArrayObject);
+            int vertexArrayObject = GL.GenVertexArray();
+            GL.BindVertexArray(vertexArrayObject);
 
             _shader = new Shader("shader.vert", "shader.frag");
 

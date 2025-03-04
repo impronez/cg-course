@@ -1,7 +1,6 @@
 ﻿using OpenTK.Windowing.Desktop;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Parabola
 {
@@ -26,15 +25,20 @@ namespace Parabola
 
             Func<float, float> function = x => 2 * x * x - 3 * x - 8;
 
-            ParabolaArgs arguments = new ParabolaArgs()
+            GraphArgs argss = new()
             {
+                Left = -1.0f,
+                Top = 1.0f,
+                Width = 2.0f,
+                Height = 2.0f,
                 MinValue = -2,
                 MaxValue = 3,
                 Function = function,
-                Color = Color4.OrangeRed
+                GraphColor = Color4.OrangeRed,
+                AxesColor = Color4.White
             };
 
-            using (ViewWindow game = new ViewWindow(GameWindowSettings.Default, nativeWindowSettings, arguments))
+            using (ViewWindow game = new ViewWindow(GameWindowSettings.Default, nativeWindowSettings, argss))
             {
                 game.Run();
             }
