@@ -36,15 +36,15 @@ namespace Parabola
 
         public static float[] ToFloatArray(RGBVertex vertex)
         {
-            return new float[]
-            {
+            return
+            [
                 vertex.Position.X,
                 vertex.Position.Y,
                 vertex.Position.Z,
                 vertex.Color.R,
                 vertex.Color.G,
                 vertex.Color.B
-            };
+            ];
         }
     }
 }
