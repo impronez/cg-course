@@ -1,15 +1,10 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Runtime.InteropServices;
 
 namespace Meadow
 {
-    class MeadowPainter : IPainter
+    class MeadowRenderer : IRenderer
     {        
-        private readonly Action<float[]> _bufferDataFunc;
-
         private readonly float _left;
         private readonly float _top;
         private readonly float _width;
@@ -18,21 +13,22 @@ namespace Meadow
         private const float _skyRatio = 0.7f;
         private const float _fieldRatio = 0.3f;
 
-        public MeadowPainter(Action<float[]> bufferDataFunc,
+        public MeadowRenderer(
             float left,
             float top,
             float width,
             float height)
         {
-            _bufferDataFunc = bufferDataFunc;
             _left = left;
             _top = top;
             _width = width;
             _height = height;
         }
 
-        public void Draw()
+        public void Render()
         {
+            ConfigureVertexAttributes();
+
             DrawSky();
             DrawField();
             DrawSun();
@@ -40,6 +36,24 @@ namespace Meadow
             DrawGrass();
             DrawFlowers();
             DrawButterflies();
+        }
+
+        private void RenderVertices(List<RGBVertex> list, PrimitiveType mode)
+        {
+            var array = list.SelectMany(v => RGBVertex.ToFloatArray(v)).ToArray();
+
+            GL.BufferData(BufferTarget.ArrayBuffer, array.Length * sizeof(float), array, BufferUsageHint.StaticDraw);
+            GL.DrawArrays(mode, 0, array.Length / 6);
+        }
+
+        private void ConfigureVertexAttributes()
+        {
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, RGBVertex.VertexSize * sizeof(float), 0);
+            GL.EnableVertexAttribArray(0);
+         
+            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false,
+                RGBVertex.VertexSize * sizeof(float), RGBVertex.ColorIndex * sizeof(float));
+            GL.EnableVertexAttribArray(1);
         }
 
         private void DrawSky()
@@ -94,7 +108,7 @@ namespace Meadow
         private void DrawGrassFirstType()
         {
             Color4 color = Color4.LightGreen;
-            var list = new List<float>();
+            var list = new List<RGBVertex>();
 
             var cx = _left + _width / 10f;
             var cy = -_height + _top + _height / 10f;
@@ -106,15 +120,13 @@ namespace Meadow
                 float x = cx + (float)Math.Cos(angle) * 0.1f;
                 float y = cy + (float)Math.Sin(angle) * 0.1f;
 
-
-                list.AddRange([cx, cy, 0f, color.R, color.G, color.B]);
-                list.AddRange([x, y, 0f, color.R, color.G, color.B]);
-                list.AddRange([cx, cy, 0f, color.R, color.G, color.B]);
-                list.AddRange([x, y, 0f, color.R, color.G, color.B]);
+                list.Add(new RGBVertex(cx, cy, color));
+                list.Add(new RGBVertex(x, y, color));
+                list.Add(new RGBVertex(cx, cy, color));
+                list.Add(new RGBVertex(x, y, color));
             }
 
-            _bufferDataFunc(list.ToArray());
-            GL.DrawArrays(PrimitiveType.Lines, 0, list.Count / 6);
+            RenderVertices(list, PrimitiveType.Lines);
         }
 
         private void DrawGrassSecondType()
@@ -124,7 +136,7 @@ namespace Meadow
             float width = _width / 15f;
             float height = _height / 18f;
 
-            var list = new List<float>();
+            var list = new List<RGBVertex>();
             var color = Color4.DarkSeaGreen;
 
             float stepX = width / 15f;
@@ -135,26 +147,21 @@ namespace Meadow
                 float y1 = startY + height * 0.1f;
                 float y2 = y1 + height;
 
-                list.AddRange(
-                [
-                    x, y1, 0f, color.R, color.G, color.B,
-                    x, y2, 0f, color.R, color.G, color.B
-                ]);
+                list.Add(new RGBVertex(x, y1, color));
+                list.Add(new RGBVertex(x, y2, color));
             }
 
-            _bufferDataFunc(list.ToArray());
-
-            GL.DrawArrays(PrimitiveType.Lines, 0, list.Count / 6);
+            RenderVertices(list, PrimitiveType.Lines);
         }
 
         private void DrawGrassThirdType()
         {
             float startX = _left + _width * 0.5f;
-            float startY = (_top - _height) + _height / 10f;//-0.9f;
+            float startY = (_top - _height) + _height / 10f;
             float width = _width * 0.1f;
             float height = _height * 0.1f;
 
-            var list = new List<float>();
+            var list = new List<RGBVertex>();
             var color = Color4.LawnGreen;
 
             float stepX = width / 10f;
@@ -169,17 +176,12 @@ namespace Meadow
                     float x2 = x1 + 0.01f;
                     float y2 = y1 + 0.02f;
 
-                    list.AddRange(new float[]
-                    {
-                        x1, y1, 0f, color.R, color.G, color.B,
-                        x2, y2, 0f, color.R, color.G, color.B
-                    });
+                    list.Add(new RGBVertex(x1, y1, color));
+                    list.Add(new RGBVertex(x2, y2, color));
                 }
             }
 
-            _bufferDataFunc(list.ToArray());
-
-            GL.DrawArrays(PrimitiveType.Polygon, 0, list.Count / 6);
+            RenderVertices(list, PrimitiveType.Polygon);
         }
 
         private void DrawFlowers()
@@ -217,7 +219,7 @@ namespace Meadow
 
             DrawFlowerStem(x - 0.0025f, y, 0.005f, _height * 0.1f, Color4.DarkGreen);
 
-            var list = new List<float>();
+            var list = new List<RGBVertex>();
             Color4 color = Color4.Red;
             for (int i = 0; i < 5; i++)
             {
@@ -225,24 +227,20 @@ namespace Meadow
                 float petalX = x + (float)Math.Cos(angle) * size * 2f;
                 float petalY = y + (float)Math.Sin(angle) * size * 2f;
 
-                list.AddRange(
-                    [
-                        x, y, 0f, color.R, color.G, color.B,
-                        petalX, petalY, 0f, color.R, color.G, color.B,
-                        x + (float)Math.Cos(angle + Math.PI / 5) * size * 1.5f,
-                        y + (float)Math.Sin(angle + Math.PI / 5) * size * 1.5f, 0f, color.R, color.G, color.B
-                    ]);
+                list.Add(new RGBVertex(x, y, color));
+                list.Add(new RGBVertex(petalX, petalY, color));
+                list.Add(new RGBVertex(x + (float)Math.Cos(angle + Math.PI / 5) * size * 1.5f,
+                    y + (float)Math.Sin(angle + Math.PI / 5) * size * 1.5f, color));
             }
 
-            _bufferDataFunc(list.ToArray());
-            GL.DrawArrays(PrimitiveType.TriangleFan, 0, list.Count / 6);
+            RenderVertices(list, PrimitiveType.TriangleFan);
 
             DrawFilledEllipse(x, y, 0.01f, 0.01f, Color4.Orange);
         }
 
         private void DrawFlowerThirdType()
         {
-            var list = new List<float>();
+            var list = new List<RGBVertex>();
             var color = Color4.Red;
 
             float x = _left + _width * 0.8f; 
@@ -258,27 +256,21 @@ namespace Meadow
                 float offsetX = x + (float)Math.Cos(angle) * x / 20f;
                 float offsetY = y + (float)Math.Sin(angle) * size * 0.4f;
 
-                list.AddRange([offsetX, offsetY, 0f, color.R, color.G, color.B]);
+                list.Add(new RGBVertex(offsetX, offsetY, color));
             }
 
-            _bufferDataFunc(list.ToArray());
-            GL.DrawArrays(PrimitiveType.TriangleFan, 0, list.Count / 6);
+            RenderVertices(list, PrimitiveType.TriangleFan);
 
             list.Clear();
 
-            list.AddRange(
-                [
-                    x - x / 20f, y, 0f, color.R, color.G, color.B,
-                    x - x * 0.03f, y + size * 0.2f, 0f, color.R, color.G, color.B,
-                    x, y, 0f, color.R, color.G, color.B,
+            list.Add(new RGBVertex(x - x / 20f, y, color));
+            list.Add(new RGBVertex(x - x * 0.03f, y + size * 0.2f, color));
+            list.Add(new RGBVertex(x, y, color));
+            list.Add(new RGBVertex(x, y, color));
+            list.Add(new RGBVertex(x + x * 0.03f, y + size * 0.2f, color));
+            list.Add(new RGBVertex(x + x / 20f, y, color));
 
-                    x, y, 0f, color.R, color.G, color.B,
-                    x + x * 0.03f, y + size * 0.2f, 0f, color.R, color.G, color.B,
-                    x + x / 20f, y, 0f, color.R, color.G, color.B,
-                ]);
-
-            _bufferDataFunc(list.ToArray());
-            GL.DrawArrays(PrimitiveType.TriangleFan, 0, list.Count / 6);
+            RenderVertices(list, PrimitiveType.TriangleFan);
         }
 
         private void DrawButterflies()
@@ -310,16 +302,15 @@ namespace Meadow
                 cx + _width / 100f, cy + _height / 100f * 3f, Color4.Sienna);
             DrawFilledEllipse(cx + _width / 200f * 3f, cy + _height / 2000f * 45f, radius - _width / 2000f * 15f, radius - _height / 2000f * 15f, Color4.Salmon);
 
-            var list = new List<float>()
+            var list = new List<RGBVertex>()
             {
-                cx + _width / 100f, cy + _height / 50f, 0f, 0f, 0f, 0f,
-                cx + _width / 200f, cy + _height / 25f, 0f, 0f, 0f, 0f,
-                cx + _width / 100f, cy + _height / 50f, 0f, 0f, 0f, 0f,
-                cx + _width / 200f * 3f, cy + _height / 25f, 0f, 0f, 0f, 0f
+                new RGBVertex(cx + _width / 100f, cy + _height / 50f, Color4.Black),
+                new RGBVertex(cx + _width / 200f, cy + _height / 25f, Color4.Black),
+                new RGBVertex(cx + _width / 100f, cy + _height / 50f, Color4.Black),
+                new RGBVertex(cx + _width / 200f * 3f, cy + _height / 25f, Color4.Black)
             };
 
-            _bufferDataFunc(list.ToArray());
-            GL.DrawArrays(PrimitiveType.Lines, 0, list.Count / 6);
+            RenderVertices(list, PrimitiveType.Lines);
         }
 
         private void DrawButterflySecondType()
@@ -344,16 +335,15 @@ namespace Meadow
                 cx, cy - _height / 2000f,
                 cx + _width / 200f, cy - _height / 200f, Color4.Beige);
 
-            var list = new List<float>()
+            var list = new List<RGBVertex>()
             {
-                cx, cy + _height / 50f, 0f, 0f, 0f, 0f,
-                cx - _width / 200f, cy + _height / 25f, 0f, 0f, 0f, 0f,
-                cx, cy + _height / 50f, 0f, 0f, 0f, 0f,
-                cx + _width / 200f, cy + _height / 25f, 0f, 0f, 0f, 0f
+                new RGBVertex(cx, cy + _height / 50f, Color4.Black),
+                new RGBVertex(cx - _width / 200f, cy + _height / 25f, Color4.Black),
+                new RGBVertex(cx, cy + _height / 50f, Color4.Black),
+                new RGBVertex(cx + _width / 200f, cy + _height / 25f, Color4.Black)
             };
 
-            _bufferDataFunc(list.ToArray());
-            GL.DrawArrays(PrimitiveType.Lines, 0, list.Count / 6);
+            RenderVertices(list, PrimitiveType.Lines);
         }
 
         private void DrawButterflyThirdType()
@@ -375,51 +365,48 @@ namespace Meadow
             DrawFilledEllipse(cx + _width / 400f * 7f, cy + _height / 400f * 7f, radius - _width / 200f, radius - _height / 200f, Color4.OrangeRed);
 
 
-            var list = new List<float>()
+            var list = new List<RGBVertex>()
             {
-                cx + _width / 100f, cy + _height / 50f, 0f, 0f, 0f, 0f,
-                cx + _width / 200f, cy + _height / 25f, 0f, 0f, 0f, 0f,
-                cx + _width / 100f, cy + _height / 50f, 0f, 0f, 0f, 0f,
-                cx + _width / 200f * 3f, cy + _height / 25f, 0f, 0f, 0f, 0f,
+                new RGBVertex(cx + _width / 100f, cy + _height / 50f, Color4.Black),
+                new RGBVertex(cx + _width / 200f, cy + _height / 25f, Color4.Black),
+                new RGBVertex(cx + _width / 100f, cy + _height / 50f, Color4.Black),
+                new RGBVertex(cx + _width / 200f * 3f, cy + _height / 25f, Color4.Black)
             };
 
-            _bufferDataFunc(list.ToArray());
-            GL.DrawArrays(PrimitiveType.Lines, 0, list.Count / 6);
+            RenderVertices(list, PrimitiveType.Lines);
         }
 
         private void DrawFlowerStem(float x, float y, float width, float height, Color4 color)
         {
-            var list = new List<float>()
+            var list = new List<RGBVertex>()
             {
-                x, y, 0f, color.R, color.G, color.B,
-                x + width, y, 0f, color.R, color.G, color.B,
-                x + width, y - height, 0f, color.R, color.G, color.B,
-                x, y - height, 0f, color.R, color.G, color.B,
-                x, y, 0f, color.R, color.G, color.B
+                new RGBVertex(x, y, color),
+                new RGBVertex(x + width, y, color),
+                new RGBVertex(x + width, y - height, color),
+                new RGBVertex(x, y - height, color),
+                new RGBVertex(x, y, color)
             };
 
-            _bufferDataFunc(list.ToArray());
-            GL.DrawArrays(PrimitiveType.Polygon, 0, list.Count / 6);
+            RenderVertices(list, PrimitiveType.Polygon);
         }
 
         private void DrawFilledRectangle(float left, float top, float width, float height, Color4 color)
         {
-            var points = new List<float>()
+            var list = new List<RGBVertex>()
             {
-                left, top, 0f, color.R, color.G, color.B,
-                left + width, top, 0f, color.R, color.G, color.B,
-                left + width, top - height, 0f, color.R, color.G, color.B,
-                left, top - height, 0f, color.R, color.G, color.B,
-                left, top, 0f, color.R, color.G, color.B
+                new RGBVertex(left, top, color),
+                new RGBVertex(left + width, top, color),
+                new RGBVertex(left + width, top - height, color),
+                new RGBVertex(left, top - height, color),
+                new RGBVertex(left, top, color)
             };
 
-            _bufferDataFunc(points.ToArray());
-            GL.DrawArrays(PrimitiveType.Polygon, 0, points.Count / 6);
+            RenderVertices(list, PrimitiveType.Polygon);
         }
 
         private void DrawFilledEllipse(float cx, float cy, float rx, float ry, Color4 color)
         {
-            var list = new List<float>();
+            var list = new List<RGBVertex>();
             int segments = 50;
 
             for (int i = 0; i < segments; i++)
@@ -429,24 +416,22 @@ namespace Meadow
                 float x = cx + (float)Math.Cos(angle) * rx;
                 float y = cy + (float)Math.Sin(angle) * ry;
 
-                list.AddRange([x, y, 0f, color.R, color.G, color.B]);
+                list.Add(new RGBVertex(x, y, color));
             }
 
-            _bufferDataFunc(list.ToArray());
-            GL.DrawArrays(PrimitiveType.Polygon, 0, list.Count / 6);
+            RenderVertices(list, PrimitiveType.Polygon);
         }
 
         private void DrawFilledTriangle(float x1, float y1, float x2, float y2, float x3, float y3, Color4 color)
         {
-            var list = new List<float>()
+            var list = new List<RGBVertex>()
             {
-                x1, y1, 0f, color.R, color.G, color.B,
-                x2, y2, 0f, color.R, color.G, color.B,
-                x3, y3, 0f, color.R, color.G, color.B
+                new RGBVertex(x1, y1, color),
+                new RGBVertex(x2, y2, color),
+                new RGBVertex(x3, y3, color)
             };
 
-            _bufferDataFunc(list.ToArray());
-            GL.DrawArrays(PrimitiveType.Triangles, 0, list.Count / 6);
+            RenderVertices(list, PrimitiveType.Polygon);
         }
     }
 }
