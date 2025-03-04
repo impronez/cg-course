@@ -10,7 +10,7 @@ namespace Parabola
         private Shader _shader;
         private Matrix4 _projection;
 
-        private Graph _graph;
+        private GraphRenderer _graph;
 
         public ViewWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, GraphArgs args) 
             : base(gameWindowSettings, nativeWindowSettings)
@@ -19,7 +19,7 @@ namespace Parabola
 
             VSync = VSyncMode.On;
 
-            _graph = new Graph(args);
+            _graph = new GraphRenderer(args);
         }
 
         protected override void OnRenderFrame(FrameEventArgs args)

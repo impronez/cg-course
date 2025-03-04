@@ -19,7 +19,7 @@ namespace Parabola
         public Color4 AxesColor;
     }
 
-    public class Graph
+    public class GraphRenderer
     {
         private GraphArgs _args;
 
@@ -28,9 +28,15 @@ namespace Parabola
         private int _vertexBufferObject;
         private int _vertexArrayObject;
 
-        public Graph(GraphArgs args)
+        private float _centerX;
+        private float _centerY;
+
+        public GraphRenderer(GraphArgs args)
         {
             _args = args;
+
+            _centerX = args.Left + args.Width / 2;
+            _centerY = args.Top - args.Height / 2;
         }
 
         public void Initialize()
@@ -54,13 +60,10 @@ namespace Parabola
             float strokeWidth = GetMaxDimension() * 0.005f;
             float step = GetMaxDimension() * _strokeStepRatio;
 
-            float centerX = _args.Left + _args.Width / 2;
-            float centerY = _args.Top - _args.Height / 2;
-
             var vertices = new List<RGBVertex>();
             for (float x = _args.MinValue; x < _args.MaxValue; x += step)
             {
-                vertices.Add(new RGBVertex(centerX + x * step, centerY + _args.Function(x) * step, _args.GraphColor));
+                vertices.Add(new RGBVertex(_centerX + x * step, _centerY + _args.Function(x) * step, _args.GraphColor));
             }
 
             DrawVertices(vertices, PrimitiveType.LineStrip, 0);
@@ -70,16 +73,13 @@ namespace Parabola
         {
             var color = _args.AxesColor;
 
-            float centerX = _args.Left + _args.Width / 2;
-            float centerY = _args.Top - _args.Height / 2;
-
             var list = new List<RGBVertex>
             {
-                new RGBVertex(_args.Left, centerY, color),
-                new RGBVertex(_args.Left + _args.Width, centerY, color),
+                new RGBVertex(_args.Left, _centerY, color),
+                new RGBVertex(_args.Left + _args.Width, _centerY, color),
 
-                new RGBVertex(centerX, _args.Top, color),
-                new RGBVertex(centerX, _args.Top - _args.Height, color),
+                new RGBVertex(_centerX, _args.Top, color),
+                new RGBVertex(_centerX, _args.Top - _args.Height, color),
             };
 
             AddStrokes(list);
@@ -93,28 +93,25 @@ namespace Parabola
             float strokeWidth = GetMaxDimension() * _strokeStepRatio / 10f;
             float step = GetMaxDimension() * _strokeStepRatio;
 
-            float centerX = _args.Left + _args.Width / 2;
-            float centerY = _args.Top - _args.Height/ 2;
-
             float right = _args.Left + _args.Width;
             float bottom = _args.Top - _args.Height;
 
             for (int i = 0; i < _args.Width / 2 / step; i++)
             {
-                list.Add(new RGBVertex(centerX - step * i, centerY + strokeWidth / 2, _args.AxesColor));
-                list.Add(new RGBVertex(centerX - step * i, centerY - strokeWidth / 2, _args.AxesColor));
+                list.Add(new RGBVertex(_centerX - step * i, _centerY + strokeWidth / 2, _args.AxesColor));
+                list.Add(new RGBVertex(_centerX - step * i, _centerY - strokeWidth / 2, _args.AxesColor));
 
-                list.Add(new RGBVertex(centerX + step * i, centerY + strokeWidth / 2, _args.AxesColor));
-                list.Add(new RGBVertex(centerX + step * i, centerY - strokeWidth / 2, _args.AxesColor));
+                list.Add(new RGBVertex(_centerX + step * i, _centerY + strokeWidth / 2, _args.AxesColor));
+                list.Add(new RGBVertex(_centerX + step * i, _centerY - strokeWidth / 2, _args.AxesColor));
             }
 
             for (int i = 0; i < _args.Height / 2 / step; i++)
             {
-                list.Add(new RGBVertex(centerX - strokeWidth / 2, centerY - step * i, _args.AxesColor));
-                list.Add(new RGBVertex(centerX + strokeWidth / 2, centerY - step * i, _args.AxesColor));
+                list.Add(new RGBVertex(_centerX - strokeWidth / 2, _centerY - step * i, _args.AxesColor));
+                list.Add(new RGBVertex(_centerX + strokeWidth / 2, _centerY - step * i, _args.AxesColor));
 
-                list.Add(new RGBVertex(centerX - strokeWidth / 2, centerY + step * i, _args.AxesColor));
-                list.Add(new RGBVertex(centerX + strokeWidth / 2, centerY + step * i, _args.AxesColor));
+                list.Add(new RGBVertex(_centerX - strokeWidth / 2, _centerY + step * i, _args.AxesColor));
+                list.Add(new RGBVertex(_centerX + strokeWidth / 2, _centerY + step * i, _args.AxesColor));
             }
         }
 
@@ -122,18 +119,15 @@ namespace Parabola
         {
             float strokeWidth = GetMaxDimension() * 0.005f;
 
-            float centerX = _args.Left + _args.Width / 2;
-            float centerY = _args.Top - _args.Height / 2;
+            list.Add(new RGBVertex(_centerX - strokeWidth, _args.Top - strokeWidth, _args.AxesColor));
+            list.Add(new RGBVertex(_centerX, _args.Top, _args.AxesColor));
+            list.Add(new RGBVertex(_centerX, _args.Top, _args.AxesColor));
+            list.Add(new RGBVertex(_centerX + strokeWidth, _args.Top - strokeWidth, _args.AxesColor));
 
-            list.Add(new RGBVertex(centerX - strokeWidth, _args.Top - strokeWidth, _args.AxesColor));
-            list.Add(new RGBVertex(centerX, _args.Top, _args.AxesColor));
-            list.Add(new RGBVertex(centerX, _args.Top, _args.AxesColor));
-            list.Add(new RGBVertex(centerX + strokeWidth, _args.Top - strokeWidth, _args.AxesColor));
-
-            list.Add(new RGBVertex(_args.Left + _args.Width - strokeWidth, centerY - strokeWidth, _args.AxesColor));
-            list.Add(new RGBVertex(_args.Left + _args.Width, centerY, _args.AxesColor));
-            list.Add(new RGBVertex(_args.Left + _args.Width, centerY, _args.AxesColor));
-            list.Add(new RGBVertex(_args.Left + _args.Width - strokeWidth, centerY + strokeWidth, _args.AxesColor));
+            list.Add(new RGBVertex(_args.Left + _args.Width - strokeWidth, _centerY - strokeWidth, _args.AxesColor));
+            list.Add(new RGBVertex(_args.Left + _args.Width, _centerY, _args.AxesColor));
+            list.Add(new RGBVertex(_args.Left + _args.Width, _centerY, _args.AxesColor));
+            list.Add(new RGBVertex(_args.Left + _args.Width - strokeWidth, _centerY + strokeWidth, _args.AxesColor));
         }
 
         private float GetMaxDimension()
