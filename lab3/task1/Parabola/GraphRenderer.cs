@@ -50,7 +50,7 @@ namespace Parabola
 
         public void Render()
         {
-            UpdateVertexInfo();
+            ConfigureVertexAttributes();
             DrawCoordAxes();
             DrawParabola();
         }
@@ -143,7 +143,7 @@ namespace Parabola
             GL.DrawArrays(mode, firstElem, list.Count);
         }
 
-        private void UpdateVertexInfo()
+        private void ConfigureVertexAttributes()
         {
             // Взаимодействие с шейдерами
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, RGBVertex.VertexSize * sizeof(float), 0);
