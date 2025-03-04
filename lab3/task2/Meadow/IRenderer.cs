@@ -2,8 +2,8 @@
 
 namespace Meadow
 {
-    public interface IPainter
+    public interface IRenderer
     {
-        public void Draw();
+        public void Render();
     }
 }
