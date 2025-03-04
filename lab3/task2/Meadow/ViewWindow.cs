@@ -9,7 +9,7 @@ namespace Meadow
     {
         private Shader _shader;
         private Matrix4 _projection;
-        private IPainter _painter;
+        private IRenderer _painter;
 
         public ViewWindow(NativeWindowSettings nativeWindowSettings) 
             : base(GameWindowSettings.Default, nativeWindowSettings)
@@ -24,29 +24,12 @@ namespace Meadow
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             _shader.Use();
-            UpdateVertexFormat();
 
-            //Painter.DrawMeadow(AddArrayToArrayBuffer);
-            _painter.Draw();
+            _painter.Render();
 
             SwapBuffers();
 
             base.OnRenderFrame(args);
-        }
-
-        private void AddArrayToArrayBuffer(float[] array)
-        {
-            GL.BufferData(BufferTarget.ArrayBuffer, array.Length * sizeof(float), array, BufferUsageHint.StaticDraw);
-        }
-
-        private void UpdateVertexFormat()
-        {
-            // Вершины
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
-            GL.EnableVertexAttribArray(0);
-            // Цвет
-            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
-            GL.EnableVertexAttribArray(1);
         }
 
         private void UpdateOrthographicMatrix()
@@ -77,7 +60,7 @@ namespace Meadow
 
             _shader = new Shader("shader.vert", "shader.frag");
 
-            _painter = new MeadowPainter(AddArrayToArrayBuffer, -1.0f, 1.0f, 2.0f, 2.0f);
+            _painter = new MeadowRenderer(-1.0f, 1.0f, 2.0f, 2.0f);
 
             UpdateOrthographicMatrix();
         }
