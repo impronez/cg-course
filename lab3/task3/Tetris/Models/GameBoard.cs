@@ -1,6 +1,11 @@
 ﻿using System.Drawing;
 using Tetris.Utilities;
 
+public enum BoardEventType
+{
+    BlockFall, LineClearing
+}
+
 namespace Tetris.Models
 {
     public class GameBoard
@@ -15,6 +20,8 @@ namespace Tetris.Models
 
         public bool IsGameOver { get; private set; }
         public int ClearedLines { get; private set; }
+        
+        public event EventHandler<BoardEventType>? BoardEvent;
 
         public GameBoard()
         {
@@ -109,7 +116,7 @@ namespace Tetris.Models
                     int x = CurrentTetromino.Position.X + j;
                     int y = CurrentTetromino.Position.Y + i;
 
-                    if (x >= 0 && x < GameBoard.Width && y >= 0 && y < GameBoard.Height)
+                    if (x is >= 0 and < Width && y is >= 0 and < Height)
                     {
                         Blocks[y, x] = CurrentTetromino.Color;
                     }
@@ -137,6 +144,7 @@ namespace Tetris.Models
             else if (direction == Direction.Down)
             {
                 MergeTetromino();
+                BoardEvent?.Invoke(this, BoardEventType.BlockFall);
             }
         }
 
@@ -171,19 +179,7 @@ namespace Tetris.Models
 
         private void MergeTetromino()
         {
-            for (int i = 0; i < CurrentTetromino.Blocks.GetLength(0); i++)
-            {
-                for (int j = 0; j < CurrentTetromino.Blocks.GetLength(1); j++)
-                {
-                    if (CurrentTetromino.Blocks[i, j] == null)
-                        continue;
-
-                    int x = CurrentTetromino.Position.X + j;
-                    int y = CurrentTetromino.Position.Y + i;
-
-                    Blocks[y, x] = CurrentTetromino.Color;
-                }
-            }
+            AddTetrominoToBoard();
 
             ClearFilledLines();
 
@@ -217,7 +213,12 @@ namespace Tetris.Models
                     y++;
                 }
             }
+
+            if (linesCleared == 0)
+                return;
+            
             ClearedLines += linesCleared;
+            BoardEvent?.Invoke(this, BoardEventType.LineClearing);
         }
 
         private bool IsLineFull(int y)

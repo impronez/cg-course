@@ -1,4 +1,5 @@
 ﻿using System.Timers;
+using Tetris.Utilities;
 
 namespace Tetris.Models
 {
@@ -17,10 +18,11 @@ namespace Tetris.Models
         public int Score { get; private set; }
         public int Level { get; private set; }
         public int LinesToNextLevel { get; private set; }
-        public int TotalClearedLines { get; private set; }
+        private int _totalClearedLines;
+
+        private readonly AudioManager _audioManager;
 
         public GameBoard Board { get; }
-        public Tetromino NextTetromino => Board.NextTetromino;
 
         private System.Timers.Timer _gameTimer;
 
@@ -33,6 +35,9 @@ namespace Tetris.Models
         {
             Board = new GameBoard();
             State = GameState.NotStarted;
+            _audioManager = new AudioManager();
+
+            Board.BoardEvent += (s, e) => ProccessBoardEvent(e);
 
             InitializeGameTimer();
         }
@@ -41,13 +46,15 @@ namespace Tetris.Models
         {
             Score = 0;
             Level = 1;
-            TotalClearedLines = 0;
+            _totalClearedLines = 0;
             LinesToNextLevel = LinesPerLevel;
             
             Board.Start();
             State = GameState.Running;
             _gameTimer.Interval = InitialDropInterval;
             _gameTimer.Start();
+            
+            _audioManager.PlayBackgroundMusic();
         }
 
         public void Pause()
@@ -56,11 +63,13 @@ namespace Tetris.Models
             {
                 State = GameState.Paused;
                 _gameTimer.Stop();
+                _audioManager.PauseBackgroundMusic();
             }
             else if (State == GameState.Paused)
             {
                 State = GameState.Running;
                 _gameTimer.Start();
+                _audioManager.ResumeBackgroundMusic();
             }
         }
 
@@ -84,14 +93,13 @@ namespace Tetris.Models
         {
             if (Board.IsGameOver)
             {
-                State = GameState.GameOver;
-                _gameTimer.Stop();
+                EndGame();
                 return;
             }
 
             Board.Update();
 
-            int linesCleared = Board.ClearedLines - TotalClearedLines;
+            int linesCleared = Board.ClearedLines - _totalClearedLines;
             if (linesCleared > 0)
             {
                 UpdateScore(linesCleared);
@@ -99,11 +107,29 @@ namespace Tetris.Models
             }
         }
 
+        private void EndGame()
+        {
+            _audioManager.PauseBackgroundMusic();
+            _audioManager.Play(AudioType.GameOver);
+            State = GameState.GameOver;
+            _gameTimer.Stop();  
+        }
+        
+        private void ProccessBoardEvent(BoardEventType eventType)
+        {
+            switch (eventType)
+            {
+                case BoardEventType.BlockFall:
+                    _audioManager.Play(AudioType.BlockFall);
+                    break;
+                case BoardEventType.LineClearing:
+                    _audioManager.Play(AudioType.LineClearing);
+                    break;
+            }
+        }
+
         private void UpdateScore(int linesCleared)
         {
-            if (linesCleared == 0)
-                return;
-
             Score += (linesCleared) switch
             {
                 1 => 10,
@@ -113,7 +139,7 @@ namespace Tetris.Models
                 _ => 0
             };
 
-            TotalClearedLines += linesCleared;
+            _totalClearedLines += linesCleared;
         }
 
         private void UpdateLevel(int clearedLines)
@@ -122,6 +148,8 @@ namespace Tetris.Models
 
             while (LinesToNextLevel <= 0)
             {
+                _audioManager.Play(AudioType.NextLevel);
+
                 Level++;
 
                 LinesToNextLevel += Level * LinesPerLevel;
