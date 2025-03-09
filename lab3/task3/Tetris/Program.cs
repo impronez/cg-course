@@ -8,7 +8,7 @@ namespace Tetris
     {
         static void Main(string[] args)
         {
-            var nativeWindowSettings = new NativeWindowSettings()
+            var nativeWindowSettings = new NativeWindowSettings
             {
                 ClientSize = new Vector2i(800, 900),
                 MinimumClientSize = new Vector2i(800, 900),
