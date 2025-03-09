@@ -35,16 +35,11 @@ namespace Tetris
                 0.1f, -1.0f, 0f, 0.0f, 1.0f
         };
 
-        private uint[] _textureIndices = { 0, 1, 3, 1, 2, 3 };
-
+        private readonly uint[] _textureIndices = { 0, 1, 3, 1, 2, 3 };
 
         public ViewWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) 
             : base(gameWindowSettings, nativeWindowSettings)
-        {
-            Console.WriteLine(GL.GetString(StringName.Version));
-
-            VSync = VSyncMode.On;
-        }
+        {}
 
         protected override void OnLoad()
         {
@@ -109,14 +104,14 @@ namespace Tetris
 
                     var color = ColorToColor4Converter.Convert(_gameModel.Board.NextTetromino.Blocks[j, i]);
 
-                    List<RGBVertex> vertices = new()
-                    {
-                        new RGBVertex(x1, y1, color),
-                        new RGBVertex(x1, y2, color),
-                        new RGBVertex(x2, y2, color),
-                        new RGBVertex(x2, y1, color),
-                        new RGBVertex(x1, y1, color)
-                    };
+                    List<RGBVertex> vertices =
+                    [
+                        new(x1, y1, color),
+                        new(x1, y2, color),
+                        new(x2, y2, color),
+                        new(x2, y1, color),
+                        new(x1, y1, color)
+                    ];
 
                     DrawPrimitiveVertices(vertices, PrimitiveType.Polygon);
                 }
@@ -139,14 +134,14 @@ namespace Tetris
                         ? _gameModel.Board.Blocks[y, x]!
                         : GameBoard.BoardColor);
 
-                    List<RGBVertex> vertices = new()
-                    {
-                        new RGBVertex(x1, y1, color),
-                        new RGBVertex(x1, y2, color),
-                        new RGBVertex(x2, y2, color),
-                        new RGBVertex(x2, y1, color),
-                        new RGBVertex(x1, y1, color)
-                    };
+                    List<RGBVertex> vertices =
+                    [
+                        new(x1, y1, color),
+                        new(x1, y2, color),
+                        new(x2, y2, color),
+                        new(x2, y1, color),
+                        new(x1, y1, color)
+                    ];
 
                     DrawPrimitiveVertices(vertices, PrimitiveType.Polygon);
                 }
@@ -177,25 +172,25 @@ namespace Tetris
         private void DrawInformationMenu()
         {
             List<string> lines = _gameModel.State == GameState.GameOver
-                ? new List<string>
-                {
+                ?
+                [
                     "Game over!",
                     $"Score: {_gameModel.Score}",
                     "For restart click 'R'"
-                }
+                ]
                 : _gameModel.State == GameState.Paused
-                ? new List<string>
-                {
+                ?
+                [
                     "Paused",
                     "Click 'P' for resume."
-                }
-                : new List<string>
-                {
+                ]
+                :
+                [
                     $"Level: {_gameModel.Level}",
                     $"Score: {_gameModel.Score}",
                     $"Lines left: {_gameModel.LinesToNextLevel}",
                     "Next tetromino:"
-                };
+                ];
 
             RenderText(lines);
 
@@ -237,7 +232,6 @@ namespace Tetris
             GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
             GL.EnableVertexAttribArray(1);
 
-            // Рисуем
             GL.DrawElements(PrimitiveType.Triangles, _textureIndices.Length, DrawElementsType.UnsignedInt, 0);
         }
 
@@ -245,14 +239,9 @@ namespace Tetris
         {
             float aspectRatio = (float)Size.X / Size.Y;
 
-            if (aspectRatio > 1)
-            {
-                _projection = Matrix4.CreateOrthographic(aspectRatio * 2.0f, 2.0f, -1.0f, 1.0f);
-            }
-            else
-            {
-                _projection = Matrix4.CreateOrthographic(2.0f, 2.0f / aspectRatio, -1.0f, 1.0f);
-            }
+            _projection = aspectRatio > 1
+                ? Matrix4.CreateOrthographic(aspectRatio * 2.0f, 2.0f, -1.0f, 1.0f)
+                : Matrix4.CreateOrthographic(2.0f, 2.0f / aspectRatio, -1.0f, 1.0f);
 
             _primitiveShader.SetMatrix4("projection", _projection);
         }
@@ -281,7 +270,6 @@ namespace Tetris
                 case OpenTK.Windowing.GraphicsLibraryFramework.Keys.R:
                     _gameModel.Start();
                     break;
-                default: break;
             }
         }
 
