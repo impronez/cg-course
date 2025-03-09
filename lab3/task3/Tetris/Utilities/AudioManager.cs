@@ -19,7 +19,7 @@ public class AudioManager
 
     private static readonly Dictionary<AudioType, string> AudioFileNames = new()
     {
-        { AudioType.Main, "main_theme_1.mp3" },
+        { AudioType.Main, "main_theme.mp3" },
         { AudioType.BlockFall, "block_fall.mp3" },
         { AudioType.LineClearing, "line_clearing.mp3" },
         { AudioType.NextLevel, "next_level.mp3" },
@@ -36,7 +36,7 @@ public class AudioManager
 
         _backgroundPlayer = new WaveOutEvent();
         _backgroundPlayer.Init(_audioLibrary[AudioType.Main]);
-        _backgroundPlayer.Volume = 0.1f;
+        _backgroundPlayer.Volume = 0.8f;
         _backgroundPlayer.PlaybackStopped += (s, e) => RestartBackgroundMusic();
         
         _eventAudioPlayer = new WaveOutEvent();
