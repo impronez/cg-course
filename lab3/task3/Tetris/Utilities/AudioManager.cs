@@ -26,8 +26,11 @@ public class AudioManager
         { AudioType.GameOver, "game_over.wav" }
     };
 
-    private readonly IWavePlayer _backgroundPlayer;
-    private readonly IWavePlayer _eventAudioPlayer;
+    private const float BackgroundAudioVolume = 0.1f;
+    private const float EventAudioVolume = 0.2f;
+    
+    private readonly WaveOutEvent _backgroundPlayer;
+    private readonly WaveOutEvent _eventAudioPlayer;
 
     public AudioManager()
     {
@@ -36,11 +39,9 @@ public class AudioManager
 
         _backgroundPlayer = new WaveOutEvent();
         _backgroundPlayer.Init(_audioLibrary[AudioType.Main]);
-        _backgroundPlayer.Volume = 0.8f;
         _backgroundPlayer.PlaybackStopped += (s, e) => RestartBackgroundMusic();
         
         _eventAudioPlayer = new WaveOutEvent();
-        _eventAudioPlayer.Volume = 1.0f;
     }
     
     public void PlayBackgroundMusic()
@@ -93,10 +94,14 @@ public class AudioManager
         foreach (AudioType audioType in Enum.GetValues(typeof(AudioType)))
         {
             _audioLibrary[audioType] = new AudioFileReader(GetAudioFilePath(audioType));
+
+            _audioLibrary[audioType].Volume = audioType is AudioType.Main
+                ? BackgroundAudioVolume
+                : EventAudioVolume;
         }
     }
 
-    private string GetAudioFilePath(AudioType audioType)
+    private static string GetAudioFilePath(AudioType audioType)
     {
         return AudioFilePath + AudioFileNames[audioType];
     }
