@@ -32,6 +32,17 @@ public class AudioManager
     private readonly WaveOutEvent _backgroundPlayer;
     private readonly WaveOutEvent _eventAudioPlayer;
 
+    private AudioType? _currentEventAudioType;
+
+    private static  readonly Dictionary<AudioType, int> AudioPriorities = new()
+    {
+        { AudioType.Main, 0 },
+        { AudioType.BlockFall, 1 },
+        { AudioType.LineClearing, 2 },
+        { AudioType.NextLevel, 3 },
+        { AudioType.GameOver, 4 }
+    };
+
     public AudioManager()
     {
         _audioLibrary = new Dictionary<AudioType, AudioFileReader>();
@@ -69,10 +80,24 @@ public class AudioManager
 
     public void Play(AudioType audioType)
     {
+        if (!IsAcceptableEvent(audioType))
+            return;
+        
+        _currentEventAudioType = audioType;
+        
         _eventAudioPlayer.Stop();
         _audioLibrary[audioType].Position = 0;
         _eventAudioPlayer.Init(_audioLibrary[audioType]);
         _eventAudioPlayer.Play();
+
+        Task.Run(async () =>
+        {
+            await Task.Delay(_audioLibrary[audioType].TotalTime);
+            if (_currentEventAudioType == audioType) 
+            {
+                _currentEventAudioType = null;
+            }
+        });
     }
 
     public void Dispose()
@@ -87,6 +112,16 @@ public class AudioManager
         {
             audio.Value.Dispose();
         }
+    }
+    
+    private bool IsAcceptableEvent(AudioType audioType)
+    {
+        return _currentEventAudioType switch
+        {
+            AudioType.GameOver => false,
+            null => true,
+            _ => AudioPriorities[audioType] >= AudioPriorities[_currentEventAudioType.Value]
+        };
     }
 
     private void InitializeAudioLibrary()
