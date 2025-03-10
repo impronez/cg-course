@@ -30,7 +30,7 @@ namespace Tetris.Models
             State = GameState.NotStarted;
             _audioManager = new AudioManager();
 
-            Board.BoardEvent += (s, e) => ProccessBoardEvent(e);
+            Board.BoardEvent += (s, e) => ProcessBoardEvent(e);
 
             InitializeGameTimer();
         }
@@ -104,7 +104,7 @@ namespace Tetris.Models
 
             Board.Update();
 
-            int linesCleared = Board.ClearedLines - _totalClearedLines;
+            var linesCleared = Board.ClearedLines - _totalClearedLines;
             if (linesCleared > 0)
             {
                 UpdateScore(linesCleared);
@@ -120,7 +120,7 @@ namespace Tetris.Models
             _gameTimer.Stop();  
         }
         
-        private void ProccessBoardEvent(BoardEventType eventType)
+        private void ProcessBoardEvent(BoardEventType eventType)
         {
             switch (eventType)
             {
