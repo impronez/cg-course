@@ -88,6 +88,12 @@ namespace Tetris.Models
             Board.RotateCurrentTetromino();
         }
 
+        public void Dispose()
+        {
+            _gameTimer.Dispose();
+            _audioManager.Dispose();
+        }
+
         private void Update()
         {
             if (Board.IsGameOver)

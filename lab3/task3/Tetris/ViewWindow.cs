@@ -279,6 +279,7 @@ namespace Tetris
 
             _primitiveShader.Dispose();
             _textRenderer.Dispose();
+            _gameModel.Dispose();
         }
 
         protected override void OnFramebufferResize(FramebufferResizeEventArgs e)
