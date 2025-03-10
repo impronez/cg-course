@@ -13,21 +13,14 @@ namespace Tetris.Models
 
     public class GameModel
     {
-        public GameState State { get; private set; }
-
-        public int Score { get; private set; }
-        public int Level { get; private set; }
-        public int LinesToNextLevel { get; private set; }
         private int _totalClearedLines;
 
         private readonly AudioManager _audioManager;
 
-        public GameBoard Board { get; }
-
         private System.Timers.Timer _gameTimer;
 
         private const int InitialDropInterval = 900;
-        private const int MinimumDropInterval = 100;
+        private const int MinimumDropInterval = 200;
         private const int DropIntervalDecrement = 150;
         private const int LinesPerLevel = 3;
 
@@ -41,6 +34,12 @@ namespace Tetris.Models
 
             InitializeGameTimer();
         }
+        
+        public GameState State { get; private set; }
+        public int Score { get; private set; }
+        public int Level { get; private set; }
+        public int LinesToNextLevel { get; private set; }
+        public GameBoard Board { get; }
 
         public void Start()
         {
@@ -89,7 +88,7 @@ namespace Tetris.Models
             Board.RotateCurrentTetromino();
         }
 
-        public void Update()
+        private void Update()
         {
             if (Board.IsGameOver)
             {
