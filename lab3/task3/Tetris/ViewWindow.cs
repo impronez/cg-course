@@ -109,11 +109,10 @@ namespace Tetris
                         new(x1, y1, color),
                         new(x1, y2, color),
                         new(x2, y2, color),
-                        new(x2, y1, color),
-                        new(x1, y1, color)
+                        new(x2, y1, color)
                     ];
-
-                    DrawPrimitiveVertices(vertices, PrimitiveType.Polygon);
+                    
+                    DrawPrimitiveVertices(vertices, PrimitiveType.Quads);
                 }
             }
         }
