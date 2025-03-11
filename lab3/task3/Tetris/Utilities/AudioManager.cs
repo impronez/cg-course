@@ -28,7 +28,9 @@ public class AudioManager
 
     private const float BackgroundAudioVolume = 0.1f;
     private const float EventAudioVolume = 0.2f;
-    
+
+    private bool _isDisposing = false;
+
     private readonly WaveOutEvent _backgroundPlayer;
     private readonly WaveOutEvent _eventAudioPlayer;
 
@@ -69,6 +71,9 @@ public class AudioManager
 
     private void RestartBackgroundMusic()
     {
+        if (_isDisposing)
+            return;
+
         _backgroundPlayer.Stop();
         PlayBackgroundMusic();
     }
@@ -102,6 +107,10 @@ public class AudioManager
 
     public void Dispose()
     {
+        _isDisposing = true;
+
+        _backgroundPlayer.PlaybackStopped -= (s, e) => RestartBackgroundMusic();
+
         _backgroundPlayer.Stop();
         _eventAudioPlayer.Stop();
         
