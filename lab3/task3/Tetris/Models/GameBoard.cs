@@ -38,7 +38,7 @@ namespace Tetris.Models
             IsGameOver = false;
 
             ClearedLines = 0;
-            AddTetrominoToBoard();
+            AddCurrentTetrominoToBoard();
         }
 
         public void Update(Direction direction = Direction.Down)
@@ -47,7 +47,7 @@ namespace Tetris.Models
 
             RemoveTetrominoFromBoard();
             MoveTetromino(direction);
-            AddTetrominoToBoard();
+            AddCurrentTetrominoToBoard();
         }
 
         public int GetUnfilledLinesCount()
@@ -84,7 +84,7 @@ namespace Tetris.Models
                 CurrentTetromino = rotatedTetromino;
             }
 
-            AddTetrominoToBoard();
+            AddCurrentTetrominoToBoard();
         }
 
         private void RemoveTetrominoFromBoard()
@@ -103,8 +103,7 @@ namespace Tetris.Models
                 }
             }
         }
-
-        private void AddTetrominoToBoard()
+        private void AddCurrentTetrominoToBoard()
         {
             for (int i = 0; i < CurrentTetromino.GetHeight(); i++)
             {
@@ -179,7 +178,7 @@ namespace Tetris.Models
 
         private void MergeTetromino()
         {
-            AddTetrominoToBoard();
+            AddCurrentTetrominoToBoard();
 
             ClearFilledLines();
 
@@ -197,7 +196,7 @@ namespace Tetris.Models
             }
             else
             {
-                AddTetrominoToBoard();
+                AddCurrentTetrominoToBoard();
             }
         }
 
