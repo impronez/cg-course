@@ -15,7 +15,8 @@ namespace Tetris.Models
     {
         private int _totalClearedLines;
 
-        private readonly AudioManager _audioManager;
+        public event Action<GameState> GameStateChanged;
+        public event Action LevelChanged;
 
         private System.Timers.Timer _gameTimer;
 
@@ -28,9 +29,6 @@ namespace Tetris.Models
         {
             Board = new GameBoard();
             State = GameState.NotStarted;
-            _audioManager = new AudioManager();
-
-            Board.BoardEvent += (s, e) => ProcessBoardEvent(e);
 
             InitializeGameTimer();
         }
@@ -50,10 +48,9 @@ namespace Tetris.Models
             
             Board.Start();
             State = GameState.Running;
+            GameStateChanged?.Invoke(State);
             _gameTimer.Interval = InitialDropInterval;
             _gameTimer.Start();
-            
-            _audioManager.PlayBackgroundMusic();
         }
 
         public void Pause()
@@ -61,14 +58,14 @@ namespace Tetris.Models
             if (State == GameState.Running)
             {
                 State = GameState.Paused;
+                GameStateChanged?.Invoke(State);
                 _gameTimer.Stop();
-                _audioManager.PauseBackgroundMusic();
             }
             else if (State == GameState.Paused)
             {
                 State = GameState.Running;
+                GameStateChanged?.Invoke(State);
                 _gameTimer.Start();
-                _audioManager.ResumeBackgroundMusic();
             }
         }
 
@@ -90,8 +87,8 @@ namespace Tetris.Models
 
         public void Dispose()
         {
+            _gameTimer.Stop();
             _gameTimer.Dispose();
-            _audioManager.Dispose();
         }
 
         private void Update()
@@ -114,23 +111,9 @@ namespace Tetris.Models
 
         private void EndGame()
         {
-            _audioManager.PauseBackgroundMusic();
-            _audioManager.Play(AudioType.GameOver);
             State = GameState.GameOver;
+            GameStateChanged?.Invoke(State);
             _gameTimer.Stop();  
-        }
-        
-        private void ProcessBoardEvent(BoardEventType eventType)
-        {
-            switch (eventType)
-            {
-                case BoardEventType.BlockFall:
-                    _audioManager.Play(AudioType.BlockFall);
-                    break;
-                case BoardEventType.LineClearing:
-                    _audioManager.Play(AudioType.LineClearing);
-                    break;
-            }
         }
 
         private void UpdateScore(int linesCleared)
@@ -153,7 +136,7 @@ namespace Tetris.Models
 
             while (LinesToNextLevel <= 0)
             {
-                _audioManager.Play(AudioType.NextLevel);
+                LevelChanged?.Invoke();
 
                 Level++;
 
@@ -164,7 +147,6 @@ namespace Tetris.Models
                 Score += Board.GetUnfilledLinesCount() * 10;
             }
         }
-
 
         private void AdjustDropSpeed()
         {
