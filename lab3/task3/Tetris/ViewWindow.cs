@@ -6,6 +6,7 @@ using System.Drawing;
 using Tetris.Models;
 using Tetris.Shaders;
 using Tetris.Utilities;
+using Tetris.Views;
 
 namespace Tetris
 {
@@ -16,6 +17,8 @@ namespace Tetris
 
         private Matrix4 _projection;
 
+        private SoundView _soundView;
+    
         private GameModel _gameModel;
         private TextRenderer _textRenderer;
 
@@ -61,6 +64,7 @@ namespace Tetris
             UpdateOrthographicMatrix();
 
             _gameModel = new GameModel();
+            _soundView = new SoundView(_gameModel);
             _gameModel.Start();
         }
 
@@ -278,6 +282,7 @@ namespace Tetris
 
             _primitiveShader.Dispose();
             _textRenderer.Dispose();
+            _soundView.Dispose();
             _gameModel.Dispose();
         }
 
