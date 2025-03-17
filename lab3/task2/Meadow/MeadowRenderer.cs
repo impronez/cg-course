@@ -43,7 +43,7 @@ namespace Meadow
             var array = list.SelectMany(v => RGBVertex.ToFloatArray(v)).ToArray();
 
             GL.BufferData(BufferTarget.ArrayBuffer, array.Length * sizeof(float), array, BufferUsageHint.StaticDraw);
-            GL.DrawArrays(mode, 0, array.Length / 6);
+            GL.DrawArrays(mode, 0, array.Length / RGBVertex.VertexSize);
         }
 
         private void ConfigureVertexAttributes()
@@ -80,13 +80,16 @@ namespace Meadow
             float x = _left + _width / 2;
             float y = _top - _height * 0.1f;
 
-            float rx = _width * 0.1f;
-            float ry = _height * 0.05f;
+            float rx = _width * 0.14f;
+            float ry = _height * 0.08f;
 
             DrawTripleCloud(x, y, rx, ry, Color4.White);
 
             x = _left + _width / 4;
             y = _top - _height * 0.2f;
+
+            rx = _width * 0.09f;
+            ry = _height * 0.04f;
 
             DrawTripleCloud(x, y, rx, ry, Color4.White);
         }
