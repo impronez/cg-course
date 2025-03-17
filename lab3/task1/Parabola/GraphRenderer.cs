@@ -37,6 +37,8 @@ namespace Parabola
 
             _centerX = args.Left + args.Width / 2;
             _centerY = args.Top - args.Height / 2;
+
+            Initialize();
         }
 
         public void Initialize()
