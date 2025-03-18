@@ -16,7 +16,7 @@ public class Camera
     
     private float _fieldOfView = MathHelper.PiOver2; // Поле зрения
 
-    public const float Speed = 1.0f;
+    public const float Speed = 1.2f;
     public const float Sensitivity = 0.2f;
 
     public Camera(Vector3 position, float aspectRatio)
