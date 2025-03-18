@@ -57,7 +57,8 @@ public class ViewWindow : GameWindow
         _shader.SetMatrix4("view", _camera.GetViewMatrix());
         _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
         
-        _cuboctahedron.Draw(_renderer, new Vector3(0.0f, 0.0f, 0.0f));        
+        GL.Enable(EnableCap.CullFace);
+        _cuboctahedron.Draw(_renderer, Vector3.Zero);        
         
         SwapBuffers();
     }
