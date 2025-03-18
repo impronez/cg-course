@@ -46,7 +46,7 @@ public class Cuboctahedron
     [
         // Грани, параллельные оси x
         0, 1, 2, 3,
-        4, 5, 6, 7,
+        7, 6, 5, 4,
         // Грани, перпендикулярные оси х
         0, 11, 4, 8,
         1, 8, 5, 9,
@@ -56,14 +56,14 @@ public class Cuboctahedron
 
     private static readonly int[] TriangleIndices =
     [
-        0, 3, 11,
-        4, 7, 11,
-        1, 0, 8,
-        5, 4, 8,
-        2, 1, 9,
-        6, 5, 9,
-        3, 2, 10,
-        7, 6, 10
+        3, 11, 0,
+        4, 11, 7,
+        0, 8, 1,
+        5, 8, 4,
+        1, 9, 2,
+        6, 9, 5,
+        2, 10, 3,
+        7, 10, 6
     ];
     
     private readonly List<RGBVertex> _rgbVerticesList;
