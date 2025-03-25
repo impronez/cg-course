@@ -21,7 +21,7 @@ public class ViewWindow : GameWindow
         private bool _firstMove = true;
 
         private readonly Vector3 _lightColor = new (1.0f, 1.0f, 1.0f);
-        private readonly Vector3 _initCameraPosition = new (0, 0, 8.4f);
+        private readonly Vector3 _initCameraPosition = new (0, 0, 8.0f);
 
         private Vector2 _lastPos;
         
