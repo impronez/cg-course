@@ -6,6 +6,8 @@ namespace MobiusStrip;
 
 public class MobiusStrip
 {
+    private static readonly Color4 Color = Color4.Cyan; 
+    
     private const float MinU = 0f;
     private const float MaxU = MathHelper.TwoPi;
     
@@ -13,7 +15,6 @@ public class MobiusStrip
     private const float MaxV = 1f;
 
     private const int SegmentsU = 100;
-    private const int SegmentsV = 2;
 
     private float[] _vertices;
     private List<RGBAVertex> _verticesList;
@@ -22,33 +23,40 @@ public class MobiusStrip
     {
         InitializeVertices();
     }
-    
     public void Draw(Renderer renderer, Vector3 position)
     {
-        renderer.DrawElements(PrimitiveType.Quads, _vertices, position);
+        renderer.DrawElements(PrimitiveType.QuadStrip, _vertices, position);
     }
 
     private void InitializeVertices()
     {
-        _verticesList = new List<RGBAVertex>();
+        _verticesList = [];
 
-        for (int i = 0; i < SegmentsU - 1; i++)
+        var u0 = MathHelper.Lerp(MinU, MaxU, 0f);
+        _verticesList.Add(GetRGBAVertex(u0, MinV));
+        _verticesList.Add(GetRGBAVertex(u0, MaxV));
+
+        for (int i = 1; i < SegmentsU; i++)
         {
-            var u1 = MathHelper.Lerp(MinU, MaxU, (float)i / (SegmentsU - 1));
-            var u2 = MathHelper.Lerp(MinU, MaxU, (float)(i + 1) / (SegmentsU - 1));
-            
-            var v1 = new Vector3(GetX(u1, MinV), GetY(u1, MinV), GetZ(u1, MinV));
-            var v2 = new Vector3(GetX(u1, MaxV), GetY(u1, MaxV), GetZ(u1, MaxV));
-            var v3 = new Vector3(GetX(u2, MaxV), GetY(u2, MaxV), GetZ(u2, MaxV));
-            var v4 = new Vector3(GetX(u2, MinV), GetY(u2, MinV), GetZ(u2, MinV));
-            
-            _verticesList.Add(new RGBAVertex(v1, Color4.Coral));
-            _verticesList.Add(new RGBAVertex(v2, Color4.Coral));
-            _verticesList.Add(new RGBAVertex(v3, Color4.Coral));
-            _verticesList.Add(new RGBAVertex(v4, Color4.Coral));
+            var u = MathHelper.Lerp(MinU, MaxU, (float)i / (SegmentsU - 1));
+            _verticesList.Add(GetRGBAVertex(u, MinV));
+            _verticesList.Add(GetRGBAVertex(u, MaxV));
         }
 
         _vertices = _verticesList.SelectMany(v => v.ToArray()).ToArray();
+    }
+
+    private static RGBAVertex GetRGBAVertex(float u, float v)
+    {
+        var position = new Vector3(GetX(u, v), GetY(u, v), GetZ(u, v));
+    
+        var color = new Color4(
+            position.X,
+            position.Y,
+            position.Z + 0.4f,
+            Color.A);
+    
+        return new RGBAVertex(position, color);
     }
 
     private static float GetX(float u, float v)
