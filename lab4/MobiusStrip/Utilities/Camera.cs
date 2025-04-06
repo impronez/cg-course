@@ -1,25 +1,29 @@
+using OpenTK.Graphics.ES30;
 using OpenTK.Mathematics;
 
 namespace MobiusStrip.Utilities;
 
 public class Camera
 {
-    public float X { get; private set; }
-    public float Y { get; private set; }
-    
-    public Vector3 Position { get; set; }
-    
     private Vector2 _lastPosition;
     
     private const float Sensitivity = 0.1f;
 
     private bool _isAllowedRotate;
 
-    public Camera(Vector3 position)
+    public Camera(Vector3 position, float aspectRatio)
     {
         _lastPosition = new Vector2(position.X, position.Y);
         Position = position;
+        AspectRatio = aspectRatio;
     }
+    
+    public float X { get; private set; }
+    public float Y { get; private set; }
+    
+    public float AspectRatio { private get; set; }
+    
+    public Vector3 Position { get; set; }
 
     public void Rotate(Vector2 newPosition)
     {
@@ -30,8 +34,6 @@ public class Camera
 
             Y += deltaX * Sensitivity;
             X -= deltaY * Sensitivity;
-
-            X = MathHelper.Clamp(X, -89f, 89f);
         }
 
         _lastPosition = newPosition;
@@ -54,6 +56,6 @@ public class Camera
 
     public Matrix4 GetProjectionMatrix()
     {
-        return Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, 1f, 0.1f, 100f);
+        return Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, AspectRatio, 0.1f, 100f);
     }
 }
