@@ -123,6 +123,11 @@ namespace MobiusStrip.Shaders
             return GL.GetAttribLocation(Handle, attribName);
         }
 
+        public int GetUniformLocation(string uniformName)
+        {
+            return GL.GetUniformLocation(Handle, uniformName);
+        }
+
         // Uniform setters
         // Uniforms are variables that can be set by user code, instead of reading them from the VBO.
         // You use VBOs for vertex-related data, and uniforms for almost everything else.
