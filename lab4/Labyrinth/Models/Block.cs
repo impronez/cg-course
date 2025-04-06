@@ -5,6 +5,8 @@ namespace Labyrinth.Models;
 
 public static class Block
 {
+    public const float Size = 1f;
+    
     public static readonly int[] SideIndices =
     [
         0, 1, 2, 3, // Front face
@@ -25,41 +27,41 @@ public static class Block
     {
         return new List<RGBAVertex>
         {
-            new (-0.5f, 0.5f, 0.5f, color),
-            new (-0.5f, 0.5f, -0.5f, color),
+            new (0f, 1f, 1f, color),
+            new (0f, 1f, 0f, color),
 
-            new (-0.5f, 0.5f, -0.5f, color),
-            new (0.5f, 0.5f, -0.5f, color),
+            new (0f, 1f, 0f, color),
+            new (1f, 1f, 0f, color),
             
-            new (0.5f, 0.5f, -0.5f, color),
-            new (0.5f, 0.5f, 0.5f, color),
+            new (1f, 1f, 0f, color),
+            new (1f, 1f, 1f, color),
             
-            new (-0.5f, 0.5f, 0.5f, color),
-            new (0.5f, 0.5f, 0.5f, color),
+            new (0f, 1f, 1f, color),
+            new (1f, 1f, 1f, color),
             
-            new (-0.5f, -0.5f, 0.5f, color),
-            new (-0.5f, -0.5f, -0.5f, color),
+            new (0f, 0f, 1f, color),
+            new (0f, 0f, 0f, color),
             
-            new (-0.5f, -0.5f, -0.5f, color),
-            new (0.5f, -0.5f, -0.5f, color),
+            new (0f, 0f, 0f, color),
+            new (1f, 0f, 0f, color),
             
-            new (0.5f, -0.5f, -0.5f, color),
-            new (0.5f, -0.5f, 0.5f, color),
+            new (1f, 0f, 0f, color),
+            new (1f, 0f, 1f, color),
             
-            new (0.5f, -0.5f, 0.5f, color),
-            new (-0.5f, -0.5f, 0.5f, color),
+            new (1f, 0f, 1f, color),
+            new (0f, 0f, 1f, color),
             
-            new (-0.5f, 0.5f, 0.5f, color),
-            new (-0.5f, -0.5f, 0.5f, color),
+            new (0f, 1f, 1f, color),
+            new (0f, 0f, 1f, color),
             
-            new (-0.5f, 0.5f, -0.5f, color),
-            new (-0.5f, -0.5f, -0.5f, color),
+            new (0f, 1f, 0f, color),
+            new (0f, 0f, 0f, color),
             
-            new (0.5f, 0.5f, -0.5f, color),
-            new (0.5f, -0.5f, -0.5f, color),
+            new (1f, 1f, 0f, color),
+            new (1f, 0f, 0f, color),
             
-            new (0.5f, 0.5f, 0.5f, color),
-            new (0.5f, -0.5f, 0.5f, color)
+            new (1f, 1f, 1f, color),
+            new (1f, 0f, 1f, color)
         };
     }
 
@@ -68,35 +70,35 @@ public static class Block
         return new List<RGBAVertex>()
         {
             // Спереди 
-            new (-0.5f, -0.5f, -0.5f, color, -Vector3.UnitZ),
-            new (-0.5f, 0.5f, -0.5f, color, -Vector3.UnitZ),
-            new (0.5f, 0.5f, -0.5f, color, -Vector3.UnitZ),
-            new (0.5f, -0.5f, -0.5f, color, -Vector3.UnitZ),
+            new (0f, 0f, 0f, color, -Vector3.UnitZ),
+            new (0f, 1f, 0f, color, -Vector3.UnitZ),
+            new (1f, 1f, 0f, color, -Vector3.UnitZ),
+            new (1f, 0f, 0f, color, -Vector3.UnitZ),
             // Сзади
-            new (-0.5f, -0.5f, 0.5f, color, Vector3.UnitZ),
-            new (0.5f, -0.5f, 0.5f, color, Vector3.UnitZ),
-            new (0.5f, 0.5f, 0.5f, color, Vector3.UnitZ),
-            new (-0.5f, 0.5f, 0.5f, color, Vector3.UnitZ),
+            new (0f, 0f, 1f, color, Vector3.UnitZ),
+            new (1f, 0f, 1f, color, Vector3.UnitZ),
+            new (1f, 1f, 1f, color, Vector3.UnitZ),
+            new (0f, 1f, 1f, color, Vector3.UnitZ),
             // Слева
-            new (-0.5f, -0.5f, -0.5f, color, -Vector3.UnitX),
-            new (-0.5f, -0.5f, 0.5f, color, -Vector3.UnitX),
-            new (-0.5f, 0.5f, 0.5f, color, -Vector3.UnitX),
-            new (-0.5f, 0.5f, -0.5f, color, -Vector3.UnitX),
+            new (0f, 0f, 0f, color, -Vector3.UnitX),
+            new (0f, 0f, 1f, color, -Vector3.UnitX),
+            new (0f, 1f, 1f, color, -Vector3.UnitX),
+            new (0f, 1f, 0f, color, -Vector3.UnitX),
             // Справа
-            new (0.5f, -0.5f, -0.5f, color, Vector3.UnitX),
-            new (0.5f, 0.5f, -0.5f, color, Vector3.UnitX),
-            new (0.5f, 0.5f, 0.5f, color, Vector3.UnitX),
-            new (0.5f, -0.5f, 0.5f, color, Vector3.UnitX),
+            new (1f, 0f, 0f, color, Vector3.UnitX),
+            new (1f, 1f, 0f, color, Vector3.UnitX),
+            new (1f, 1f, 1f, color, Vector3.UnitX),
+            new (1f, 0f, 1f, color, Vector3.UnitX),
             // Снизу
-            new (-0.5f, -0.5f, -0.5f, color, -Vector3.UnitY),
-            new (0.5f, -0.5f, -0.5f, color, -Vector3.UnitY),
-            new (0.5f, -0.5f, 0.5f, color, -Vector3.UnitY),
-            new (-0.5f, -0.5f, 0.5f, color, -Vector3.UnitY),
+            new (0f, 0f, 0f, color, -Vector3.UnitY),
+            new (1f, 0f, 0f, color, -Vector3.UnitY),
+            new (1f, 0f, 1f, color, -Vector3.UnitY),
+            new (0f, 0f, 1f, color, -Vector3.UnitY),
             // Сверху
-            new (-0.5f, 0.5f, -0.5f, color, Vector3.UnitY),
-            new (-0.5f, 0.5f, 0.5f, color, Vector3.UnitY),
-            new (0.5f, 0.5f, 0.5f, color, Vector3.UnitY),
-            new (0.5f, 0.5f, -0.5f, color, Vector3.UnitY)
+            new (0f, 1f, 0f, color, Vector3.UnitY),
+            new (0f, 1f, 1f, color, Vector3.UnitY),
+            new (1f, 1f, 1f, color, Vector3.UnitY),
+            new (1f, 1f, 0f, color, Vector3.UnitY)
         };
     }
 }
