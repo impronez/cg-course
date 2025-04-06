@@ -1,3 +1,4 @@
+using Labyrinth.Models;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -21,7 +22,7 @@ public class ViewWindow : GameWindow
         private bool _firstMove = true;
 
         private readonly Vector3 _lightColor = new (1.0f, 1.0f, 1.0f);
-        private readonly Vector3 _initCameraPosition = new (0, 0, 8.0f);
+        private readonly Vector3 _initCameraPosition = new (0.5f, 0.6f, 0.5f);
 
         private Vector2 _lastPos;
         
@@ -37,7 +38,7 @@ public class ViewWindow : GameWindow
         {
             base.OnLoad();
 
-            GL.ClearColor(0.8f, 0.8f, 0.8f, 1.0f);
+            GL.ClearColor(0, 0, 0, 0);
 
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
@@ -67,7 +68,6 @@ public class ViewWindow : GameWindow
 
             _shader.SetVector3("lightColor", _lightColor);
             _shader.SetVector3("lightPos", _camera.Position);
-            _shader.SetVector3("viewPos", _camera.Position);
 
             _labyrinth.Draw(_renderer);
             
