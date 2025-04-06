@@ -17,7 +17,7 @@ public class ViewWindow : GameWindow
     private Camera _camera;
     
     private MobiusStrip _mobiusStrip;
-    
+
     public ViewWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) 
         : base(gameWindowSettings, nativeWindowSettings)
     {}
@@ -32,10 +32,10 @@ public class ViewWindow : GameWindow
         
         _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
         _shader.Use();
-
+        
         _mobiusStrip = new MobiusStrip();
 
-        _camera = new Camera(new Vector3(0f, 0f, 10f));
+        _camera = new Camera(new Vector3(0f, 0f, 5f), (float)Size.X / Size.Y);
         
         _renderer = new Renderer(_shader);
 
@@ -89,6 +89,15 @@ public class ViewWindow : GameWindow
         {
             _camera.AllowRotate(false);
         }
+    }
+
+    protected override void OnResize(ResizeEventArgs e)
+    {
+        base.OnResize(e);
+        
+        GL.Viewport(0, 0, e.Width, e.Height);
+        
+        _camera.AspectRatio = ((float)e.Width / e.Height);
     }
 
     protected override void OnUnload()
