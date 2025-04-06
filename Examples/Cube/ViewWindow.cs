@@ -30,6 +30,7 @@ public class ViewWindow : GameWindow
         GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         
         GL.Enable(EnableCap.DepthTest);
+        GL.Enable(EnableCap.CullFace);
         
         _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
         _shader.Use();
