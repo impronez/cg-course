@@ -1,9 +1,10 @@
 #version 330 core
-
 out vec4 outputColor;
-in vec3 ourColor;
+
+in vec3 fragColor;
 
 void main()
 {
-    outputColor = vec4(ourColor, 1.0);
+    float ambientStrength = 0.1;
+    outputColor = vec4(fragColor, 1.0);
 }
