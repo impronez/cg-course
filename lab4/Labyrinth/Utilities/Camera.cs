@@ -11,8 +11,8 @@ public class Camera
         private Vector3 _up = Vector3.UnitY;
         private Vector3 _right = Vector3.UnitX;
 
-        private float _pitch; // Угол вращения по оси Х
-        private float _yaw = -MathHelper.PiOver2; // Угол вращения по оси Y
+        private float _pitch; // Угол вращения вверх/вниз
+        private float _yaw = -MathHelper.PiOver2; // Угол вращения влево/вправо
         private float _fov = MathHelper.PiOver2; // Поле зрения камеры
 
         public Camera(Vector3 position, float aspectRatio)
@@ -48,7 +48,6 @@ public class Camera
                 UpdateVectors();
             }
         }
-
         
         public float Fov
         {
