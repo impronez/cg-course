@@ -17,18 +17,20 @@ public class Renderer
     {
         _shader = shader;
         
-        _vertexArrayObject = GL.GenVertexArray();
         _vertexBufferObject = GL.GenBuffer();
 
-        GL.BindVertexArray(_vertexArrayObject);
-        
         GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
         GL.BufferData(BufferTarget.ArrayBuffer, 0, IntPtr.Zero, BufferUsageHint.DynamicDraw);
+        
+        _vertexArrayObject = GL.GenVertexArray();
+        GL.BindVertexArray(_vertexArrayObject);
 
-        GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, RGBAVertex.Size * sizeof(float), 0);
+        var positionLocation = _shader.GetAttribLocation("aPosition");
+        GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, RGBAVertex.Size * sizeof(float), 0);
         GL.EnableVertexAttribArray(0);
 
-        GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, RGBAVertex.Size * sizeof(float), RGBAVertex.ColorIndex * sizeof(float));
+        var colorLocation = _shader.GetAttribLocation("aColor");
+        GL.VertexAttribPointer(colorLocation, 3, VertexAttribPointerType.Float, false, RGBAVertex.Size * sizeof(float), RGBAVertex.ColorOffset * sizeof(float));
         GL.EnableVertexAttribArray(1);
     }
 
