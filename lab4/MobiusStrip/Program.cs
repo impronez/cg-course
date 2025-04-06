@@ -10,7 +10,7 @@ class Program
     {
         var nativeWindowSettings = new NativeWindowSettings()
         {
-            ClientSize = new Vector2i(800, 600),
+            ClientSize = new Vector2i(1200, 900),
             Title = "Mobius Strip",
             
             Flags = ContextFlags.Default,
