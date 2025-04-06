@@ -4,8 +4,8 @@ namespace MobiusStrip.Utilities;
 
 public struct RGBAVertex
 {
-    public const int Size = 7;
-    public const int ColorIndex = 3;
+    public static readonly int Size = 7;
+    public static readonly int ColorOffset = 3;
 
     public readonly Vector3 Position;
     
