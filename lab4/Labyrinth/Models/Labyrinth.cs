@@ -22,12 +22,12 @@ public class Labyrinth
         var blockVerticesList = Block.GetVerticesList(InSideColor);
         _blockVertices = blockVerticesList.SelectMany(vert => vert.ToArray()).ToArray();
         
-        BlockPositions = LabyrinthLayout.GetBlockPositions();
+        BlockPositions = LabyrinthMap.GetBlockPositions();
         
         var edgesVerticesList = Block.GetEdgeVerticesList(Color4.BlueViolet);
         _blockEdgesVertices = edgesVerticesList.SelectMany(vert => vert.ToArray()).ToArray();
         
-        var boxVerticesList = LabyrinthLayout.GetBoxVertices(OutSideColor, UpSideColor, BottomSideColor);
+        var boxVerticesList = LabyrinthLayout.GetLabyrinthBoundaryVertices(OutSideColor, UpSideColor, BottomSideColor);
         _boxVertices = boxVerticesList.SelectMany(vert => vert.ToArray()).ToArray();
     }
 
