@@ -4,7 +4,7 @@ using TextureLabyrinth.Shaders;
 
 namespace TextureLabyrinth.Utilities;
 
-public class Renderer
+public class Renderer : IDisposable
 {
     private bool _disposed;
     
@@ -31,35 +31,32 @@ public class Renderer
         GL.BufferData(BufferTarget.ElementArrayBuffer, 0, IntPtr.Zero, BufferUsageHint.DynamicDraw); 
 
         var positionLocation = _shader.GetAttribLocation("aPosition");
-        GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, RGBAVertex.Size * sizeof(float), 0);
+        GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, TexVertex.Size * sizeof(float), TexVertex.PositionOffset);
         GL.EnableVertexAttribArray(positionLocation);
-
-        var colorLocation = _shader.GetAttribLocation("aColor");
-        GL.VertexAttribPointer(colorLocation, 3, VertexAttribPointerType.Float, false,
-            RGBAVertex.Size * sizeof(float), RGBAVertex.ColorOffset * sizeof(float));
-        GL.EnableVertexAttribArray(colorLocation);
+        
+        var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
+        GL.EnableVertexAttribArray(texCoordLocation);
+        GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, TexVertex.Size * sizeof(float),
+            TexVertex.TexCoordOffset * sizeof(float));
         
         var normalLocation = _shader.GetAttribLocation("aNormal");
         GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false,
-            RGBAVertex.Size * sizeof(float), RGBAVertex.NormalOffset * sizeof(float));
+            TexVertex.Size * sizeof(float), TexVertex.NormalOffset * sizeof(float));
         GL.EnableVertexAttribArray(normalLocation);
     }
 
     public void DrawElements(PrimitiveType primitiveType, 
         float[] vertices, 
         int[] indices, 
-        Vector3 modelMatrixPosition,
-        int thickness = 1)
+        Vector3 modelMatrixPosition)
     {
         _shader.Use();
-        
+
         var model = Matrix4.CreateTranslation(modelMatrixPosition);
         _shader.SetMatrix4("model", model);
-        
+
         UpdateBuffers(vertices, indices);
-        
-        GL.LineWidth(thickness);
-        
+
         GL.BindVertexArray(_vertexArrayObject);
         GL.DrawElements(primitiveType, indices.Length, DrawElementsType.UnsignedInt, 0);
     }

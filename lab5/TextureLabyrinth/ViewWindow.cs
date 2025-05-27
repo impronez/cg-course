@@ -6,6 +6,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using TextureLabyrinth.Shaders;
 using TextureLabyrinth.Utilities;
 using TextureLabyrinth.Models;
+using TextureLabyrinth.Textures;
 
 namespace TextureLabyrinth;
 
@@ -22,7 +23,7 @@ public class ViewWindow : GameWindow
         private bool _firstMove = true;
 
         private readonly Vector3 _lightColor = new (1.0f, 1.0f, 1.0f);
-        private readonly Vector3 _initCameraPosition = new (0.5f, 0.6f, 0.5f);
+        private readonly Vector3 _initCameraPosition = new (1.5f, 0.6f, 0.5f);
 
         private Vector2 _lastPos;
         
@@ -50,6 +51,8 @@ public class ViewWindow : GameWindow
             _renderer = new Renderer(_shader);
 
             _labyrinth = new Labyrinth();
+
+            _shader.SetInt("mainTexture", 0);
 
             _collisionHandler = new CollisionHandler(_labyrinth);
             _inputHandler = new InputHandler(_camera, _collisionHandler);

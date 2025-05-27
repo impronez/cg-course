@@ -47,10 +47,15 @@ public class InputHandler
                 _camera.Position = newPosition;
         }
 
-        /*if (keyboardState.IsKeyDown(Keys.LeftShift))
-        {
-            _camera.Position += up * Camera.Speed * deltaTime;
-        }*/
+        // if (keyboardState.IsKeyDown(Keys.LeftShift))
+        // {
+        //     _camera.Position += up * Camera.Speed * deltaTime;
+        // }
+        //
+        // if (keyboardState.IsKeyDown(Keys.Space))
+        // {
+        //     _camera.Position -= up * Camera.Speed * deltaTime;
+        // }
 
         return true;
     }

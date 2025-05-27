@@ -6,99 +6,69 @@ namespace TextureLabyrinth.Models;
 public static class Block
 {
     public const float Size = 1f;
-    
+
     public static readonly int[] SideIndices =
     [
         0, 1, 2, 3, // Front face
         4, 5, 6, 7, // Back face
         8, 9, 10, 11, // Left face
-        12, 13, 14, 15, // Right face
-        16, 17, 18, 19, // Bottom face
-        20, 21, 22, 23 // Top face
+        12, 13, 14, 15 // Right face
     ];
 
-    public static readonly int[] EdgeIndices =
+    public static readonly int[] InnerBottomSideIndices =
     [
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+        0, 1, 2, 3
     ];
 
-    public static List<RGBAVertex> GetEdgeVerticesList(Color4 color)
-    {
-        return new List<RGBAVertex>
-        {
-            new (0f, 1f, 1f, color),
-            new (0f, 1f, 0f, color),
+    public static readonly int[] InnerUpSideIndices =
+    [
+        3, 2, 1, 0
+    ];
 
-            new (0f, 1f, 0f, color),
-            new (1f, 1f, 0f, color),
-            
-            new (1f, 1f, 0f, color),
-            new (1f, 1f, 1f, color),
-            
-            new (0f, 1f, 1f, color),
-            new (1f, 1f, 1f, color),
-            
-            new (0f, 0f, 1f, color),
-            new (0f, 0f, 0f, color),
-            
-            new (0f, 0f, 0f, color),
-            new (1f, 0f, 0f, color),
-            
-            new (1f, 0f, 0f, color),
-            new (1f, 0f, 1f, color),
-            
-            new (1f, 0f, 1f, color),
-            new (0f, 0f, 1f, color),
-            
-            new (0f, 1f, 1f, color),
-            new (0f, 0f, 1f, color),
-            
-            new (0f, 1f, 0f, color),
-            new (0f, 0f, 0f, color),
-            
-            new (1f, 1f, 0f, color),
-            new (1f, 0f, 0f, color),
-            
-            new (1f, 1f, 1f, color),
-            new (1f, 0f, 1f, color)
-        };
-    }
-
-    public static List<RGBAVertex> GetVerticesList(Color4 color)
+    public static readonly List<TexVertex> BottomSideVerticesList = new()
     {
-        return new List<RGBAVertex>()
-        {
-            // Спереди 
-            new (0f, 0f, 0f, color, -Vector3.UnitZ),
-            new (0f, 1f, 0f, color, -Vector3.UnitZ),
-            new (1f, 1f, 0f, color, -Vector3.UnitZ),
-            new (1f, 0f, 0f, color, -Vector3.UnitZ),
-            // Сзади
-            new (0f, 0f, 1f, color, Vector3.UnitZ),
-            new (1f, 0f, 1f, color, Vector3.UnitZ),
-            new (1f, 1f, 1f, color, Vector3.UnitZ),
-            new (0f, 1f, 1f, color, Vector3.UnitZ),
-            // Слева
-            new (0f, 0f, 0f, color, -Vector3.UnitX),
-            new (0f, 0f, 1f, color, -Vector3.UnitX),
-            new (0f, 1f, 1f, color, -Vector3.UnitX),
-            new (0f, 1f, 0f, color, -Vector3.UnitX),
-            // Справа
-            new (1f, 0f, 0f, color, Vector3.UnitX),
-            new (1f, 1f, 0f, color, Vector3.UnitX),
-            new (1f, 1f, 1f, color, Vector3.UnitX),
-            new (1f, 0f, 1f, color, Vector3.UnitX),
-            // Снизу
-            new (0f, 0f, 0f, color, -Vector3.UnitY),
-            new (1f, 0f, 0f, color, -Vector3.UnitY),
-            new (1f, 0f, 1f, color, -Vector3.UnitY),
-            new (0f, 0f, 1f, color, -Vector3.UnitY),
-            // Сверху
-            new (0f, 1f, 0f, color, Vector3.UnitY),
-            new (0f, 1f, 1f, color, Vector3.UnitY),
-            new (1f, 1f, 1f, color, Vector3.UnitY),
-            new (1f, 1f, 0f, color, Vector3.UnitY)
-        };
-    }
+        new(0f, 0f, 0f, 0f, 0f, Vector3.UnitY),
+        new(0f, 0f, 1f, 0f, 1f, Vector3.UnitY),
+        new(1f, 0f, 1f, 1f, 1f, Vector3.UnitY),
+        new(1f, 0f, 0f, 1f, 0f, Vector3.UnitY)
+    };
+
+    public static readonly List<TexVertex> UpSideVerticesList = new()
+    {
+        new(0f, 1f, 0f, 0f, 0f, -Vector3.UnitY),
+        new(0f, 1f, 1f, 0f, 1f, -Vector3.UnitY),
+        new(1f, 1f, 1f, 1f, 1f, -Vector3.UnitY),
+        new(1f, 1f, 0f, 1f, 0f, -Vector3.UnitY)
+    };
+
+    public static readonly List<TexVertex> SidesVerticesList = new()
+    {
+        // Front
+        new(0f, 0f, 0f, 0f, 0f, -Vector3.UnitZ), // bottom-left
+        new(0f, 1f, 0f, 0f, 1f, -Vector3.UnitZ), // top-left
+        new(1f, 1f, 0f, 1f, 1f, -Vector3.UnitZ), // top-right
+        new(1f, 0f, 0f, 1f, 0f, -Vector3.UnitZ), // bottom-right
+
+        // Back
+        new(0f, 0f, 1f, 1f, 0f, Vector3.UnitZ),
+        new(1f, 0f, 1f, 0f, 0f, Vector3.UnitZ),
+        new(1f, 1f, 1f, 0f, 1f, Vector3.UnitZ),
+        new(0f, 1f, 1f, 1f, 1f, Vector3.UnitZ),
+
+        // Left
+        new(0f, 0f, 0f, 1f, 0f, -Vector3.UnitX),
+        new(0f, 0f, 1f, 0f, 0f, -Vector3.UnitX),
+        new(0f, 1f, 1f, 0f, 1f, -Vector3.UnitX),
+        new(0f, 1f, 0f, 1f, 1f, -Vector3.UnitX),
+
+        // Right
+        new(1f, 0f, 0f, 0f, 0f, Vector3.UnitX),
+        new(1f, 1f, 0f, 0f, 1f, Vector3.UnitX),
+        new(1f, 1f, 1f, 1f, 1f, Vector3.UnitX),
+        new(1f, 0f, 1f, 1f, 0f, Vector3.UnitX)
+    };
+
+    public static readonly float[] SidesVertices = SidesVerticesList.SelectMany(v => v.ToArray()).ToArray();
+    public static readonly float[] UpSideVertices = UpSideVerticesList.SelectMany(v => v.ToArray()).ToArray();
+    public static readonly float[] BottomSideVertices = BottomSideVerticesList.SelectMany(v => v.ToArray()).ToArray();
 }
