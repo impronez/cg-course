@@ -20,7 +20,6 @@ public class InputHandler
         
         var forward = new Vector3(_camera.Front.X, 0, _camera.Front.Z).Normalized();
         var right = new Vector3(_camera.Right.X, 0, _camera.Right.Z).Normalized();
-        //var up = new Vector3(_camera.Up.X, _camera.Up.Y, _camera.Up.Z).Normalized();
 
         if (keyboardState.IsKeyDown(Keys.W))
         {
@@ -46,11 +45,6 @@ public class InputHandler
             if (_collisionHandler.CanMove(newPosition))
                 _camera.Position = newPosition;
         }
-
-        /*if (keyboardState.IsKeyDown(Keys.LeftShift))
-        {
-            _camera.Position += up * Camera.Speed * deltaTime;
-        }*/
 
         return true;
     }

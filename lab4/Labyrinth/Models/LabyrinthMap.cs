@@ -28,14 +28,6 @@ public static class LabyrinthMap
     public static readonly float MaxBoundaryX = Map.GetLength(0) / 2f;
     public static readonly float MinBoundaryZ = -(Map.GetLength(1) / 2f);
     public static readonly float MaxBoundaryZ = Map.GetLength(1) / 2f;
-    
-    public static Vector3 GetInitCameraPosition()
-    {
-        var centerX = Map.GetLength(0) / 2;
-        var centerZ = Map.GetLength(1) / 2;
-        
-        return new Vector3(-centerX, 0.5f, -centerZ);
-    }
 
     public static Vector3[] GetBlockPositions()
     {
